@@ -13,7 +13,6 @@ public class EyeMovement : MonoBehaviour
     public float duration = 2;
     public float closed_eye_duration = 0.1f;
 
-    public object Time { get; private set; }
 
     // Use this for initialization
     void Start()
