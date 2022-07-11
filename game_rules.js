@@ -17,8 +17,41 @@ const default_character_data = {
 let character_decision_template = {
   character: hero_character_variable,
   target:"enemy",
-  attack_slots:{fire:1,earth:1,water:1}
+  attack_choices:{fire:1,earth:1,water:1}
 };
+
+function GameRules(characters_state_decisions){
+  
+  Object.keys(characters_state_decisions).forEach(key => {
+    let target=characters_state_decisions[key].target
+    let character=characters_state_decisions[target].character
+    let attack_choices=characters_state_decisions[key].attack_choices
+    //if target is himself
+    if(target==key){
+      //alterar estado da personagem
+      /*
+      character.health+=1
+      character.defense+=1
+      characters_state_decisions[target].character=character
+      */
+      
+    }
+    //if target is the adversary
+    else{
+      //alterar estado da personagem
+      /*
+      character.health-=1
+      character.defense-=1
+      character.burned+=0.1
+      characters_state_decisions[target].character=character
+      */
+     
+    }
+
+  })
+  return characters_state_decisions
+}
+
 
 class Character {
   constructor(character_data) {
