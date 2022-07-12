@@ -20,6 +20,45 @@ let character_decision_template = {
   attack_choices:{fire:1,earth:1,water:1}
 };
 
+
+
+
+/*
+input: attack choices
+output: string with element combination
+example:
+  input:{fire:1,earth:1,water:1}
+  output: "eletricity"
+  ----
+  input:{fire:3}
+  output: "fire"
+*/
+function elementsCombinations(){
+
+}
+function targetEqualsHimselfRules(character,attack_choices){
+
+}
+function targetDiffThanHimselfRules(character,attack_choices){
+  
+}
+/*
+input: json with both characters hero and enemy decisions (like character_decision_template)
+input example:
+{
+  hero:{
+    character: hero_character_variable,
+    target:"enemy",
+    attack_choices:{fire:1,earth:1,water:1}
+  },
+  enemy:{
+    character: hero_character_variable,
+    target:"hero",
+    attack_choices:{fire:1,earth:1,water:1}
+  }
+}
+output: returns same json from input but with character variables updated
+*/
 function GameRules(characters_state_decisions){
   
   Object.keys(characters_state_decisions).forEach(key => {
@@ -29,6 +68,7 @@ function GameRules(characters_state_decisions){
     //if target is himself
     if(target==key){
       //alterar estado da personagem
+      targetEqualsHimselfRules(character,attack_choices)
       /*
       character.health+=1
       character.defense+=1
@@ -39,6 +79,7 @@ function GameRules(characters_state_decisions){
     //if target is the adversary
     else{
       //alterar estado da personagem
+      targetDiffThanHimselfRules(character,attack_choices)
       /*
       character.health-=1
       character.defense-=1
