@@ -9,7 +9,7 @@ const default_character_data = {
   frozen: 0.0,
   rooted: 0.0,
   electrified: 0.0,
-  water_state: false,
+  water_state: 0,
 
   attack_slots: 1,
 };
@@ -37,7 +37,50 @@ function elementsCombinations(){
 
 }
 function targetEqualsHimselfRules(character,attack_choices){
+  apply_rules={
+    fire:()=>{
+      character.attack+=attack_choices[fire]
+      
+    },
+    water:()=>{
+      character.water_state+=attack_choices[water]
+      
+    },
+    earth:()=>{
+      character.defense+=attack_choices[earth]
+      
+    },
+    wind:()=>{
+      character.speed+=attack_choices[wind]
+      
+    },
+    electricity:()=>{
+      character.attack+=attack_choices[fire]+attack_choices[water]+attack_choices[earth]
+      character.speed+=attack_choices[fire]+attack_choices[water]+attack_choices[earth]
+      
+    },
+    tree:()=>{
+      character.health+=attack_choices[water]+attack_choices[earth]
+    },
+    all_elements:()=>{
+      character.attack+=attack_choices[fire]
+      character.defense+=attack_choices[earth]
+      character.speed+=attack_choices[wind]
+      let elements=['fire','water','earth','wind','electricity','tree']
+      //apply_rules[elements.random()]
+    }
 
+
+  }
+  result_element=elementsCombinations(attack_choices)
+  if(apply_rules[result_element]==null){
+    Object.keys(attack_choices).forEach(element=>{
+      apply_rules[element]
+    })
+  }else{
+    apply_rules[result_element]()  
+  }
+  return character
 }
 function targetDiffThanHimselfRules(character,attack_choices){
   
@@ -68,7 +111,7 @@ function GameRules(characters_state_decisions){
     //if target is himself
     if(target==key){
       //alterar estado da personagem
-      targetEqualsHimselfRules(character,attack_choices)
+      characters_state_decisions[target].character=targetEqualsHimselfRules(character,attack_choices)
       /*
       character.health+=1
       character.defense+=1
@@ -79,7 +122,7 @@ function GameRules(characters_state_decisions){
     //if target is the adversary
     else{
       //alterar estado da personagem
-      targetDiffThanHimselfRules(character,attack_choices)
+      characters_state_decisions[target].character=targetDiffThanHimselfRules(character,attack_choices)
       /*
       character.health-=1
       character.defense-=1
