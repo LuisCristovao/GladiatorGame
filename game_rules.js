@@ -40,19 +40,26 @@ function targetEqualsHimselfRules(character,attack_choices){
   apply_rules={
     fire:()=>{
       character.attack+=attack_choices[fire]
+      character.water_state-=attack_choices[fire]
+      character.water_state=Math.max(character.water_state,0)
       
     },
     water:()=>{
       character.water_state+=attack_choices[water]
+      character.burned-=attack_choices[water]*0.1
+      character.burned=Math.max(character.burned,0.0)
       
     },
     earth:()=>{
       character.defense+=attack_choices[earth]
+      character.electrified-=attack_choices[earth]*0.1
+      character.electrified=Math.max(character.electrified,0.0)
       
     },
     wind:()=>{
       character.speed+=attack_choices[wind]
-      
+      character.burned+=attack_choices[wind]*0.1
+      character.burned=Math.min(character.burned,1.0)
     },
     electricity:()=>{
       character.attack+=attack_choices[fire]+attack_choices[water]+attack_choices[earth]
@@ -67,7 +74,7 @@ function targetEqualsHimselfRules(character,attack_choices){
       character.defense+=attack_choices[earth]
       character.speed+=attack_choices[wind]
       let elements=['fire','water','earth','wind','electricity','tree']
-      //apply_rules[elements.random()]
+      apply_rules[elements[Math.floor(Math.random()*elements.length)]]
     }
 
 
