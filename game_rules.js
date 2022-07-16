@@ -16,12 +16,9 @@ const default_character_data = {
 
 let character_decision_template = {
   character: hero_character_variable,
-  target:"enemy",
-  attack_choices:{fire:1,earth:1,water:1}
+  target: "enemy",
+  attack_choices: { fire: 1, earth: 1, water: 1 },
 };
-
-
-
 
 /*
 input: attack choices
@@ -33,64 +30,100 @@ example:
   input:{fire:3}
   output: "fire"
 */
-function elementsCombinations(){
-
-}
-function targetEqualsHimselfRules(character,attack_choices){
-  apply_rules={
-    fire:()=>{
-      character.attack+=attack_choices[fire]
-      character.water_state-=attack_choices[fire]
-      character.water_state=Math.max(character.water_state,0)
-      
+function elementsCombinations() {}
+function targetEqualsHimselfRules(character, attack_choices) {
+  apply_rules = {
+    fire: () => {
+      character.attack += attack_choices[fire];
+      character.water_state -= attack_choices[fire];
+      character.water_state = Math.max(character.water_state, 0);
     },
-    water:()=>{
-      character.water_state+=attack_choices[water]
-      character.burned-=attack_choices[water]*0.1
-      character.burned=Math.max(character.burned,0.0)
-      
+    water: () => {
+      character.water_state += attack_choices[water];
+      character.burned -= attack_choices[water] * 0.1;
+      character.burned = Math.max(character.burned, 0.0);
     },
-    earth:()=>{
-      character.defense+=attack_choices[earth]
-      character.electrified-=attack_choices[earth]*0.1
-      character.electrified=Math.max(character.electrified,0.0)
-      
+    earth: () => {
+      character.defense += attack_choices[earth];
+      character.electrified -= attack_choices[earth] * 0.1;
+      character.electrified = Math.max(character.electrified, 0.0);
     },
-    wind:()=>{
-      character.speed+=attack_choices[wind]
-      character.burned+=attack_choices[wind]*0.1
-      character.burned=Math.min(character.burned,1.0)
+    wind: () => {
+      character.speed += attack_choices[wind];
+      character.burned += attack_choices[wind] * 0.1;
+      character.burned = Math.min(character.burned, 1.0);
     },
-    electricity:()=>{
-      character.attack+=attack_choices[fire]+attack_choices[water]+attack_choices[earth]
-      character.speed+=attack_choices[fire]+attack_choices[water]+attack_choices[earth]
-      
+    electricity: () => {
+      character.attack +=
+        attack_choices[fire] + attack_choices[water] + attack_choices[earth];
+      character.speed +=
+        attack_choices[fire] + attack_choices[water] + attack_choices[earth];
     },
-    tree:()=>{
-      character.health+=attack_choices[water]+attack_choices[earth]
+    tree: () => {
+      character.health += attack_choices[water] + attack_choices[earth];
     },
-    all_elements:()=>{
-      character.attack+=attack_choices[fire]
-      character.defense+=attack_choices[earth]
-      character.speed+=attack_choices[wind]
-      let elements=['fire','water','earth','wind','electricity','tree']
-      apply_rules[elements[Math.floor(Math.random()*elements.length)]]
-    }
-
-
+    all_elements: () => {
+      character.attack += attack_choices[fire];
+      character.defense += attack_choices[earth];
+      character.speed += attack_choices[wind];
+      let elements = ["fire", "water", "earth", "wind", "electricity", "tree"];
+      apply_rules[elements[Math.floor(Math.random() * elements.length)]];
+    },
+  };
+  result_element = elementsCombinations(attack_choices);
+  if (apply_rules[result_element] == null) {
+    Object.keys(attack_choices).forEach((element) => {
+      apply_rules[element];
+    });
+  } else {
+    apply_rules[result_element]();
   }
-  result_element=elementsCombinations(attack_choices)
-  if(apply_rules[result_element]==null){
-    Object.keys(attack_choices).forEach(element=>{
-      apply_rules[element]
-    })
-  }else{
-    apply_rules[result_element]()  
-  }
-  return character
+  return character;
 }
-function targetDiffThanHimselfRules(character,attack_choices){
-  
+function targetDiffThanHimselfRules(character, attack_choices) {
+  apply_rules = {
+    fire: () => {
+      character.health -= attack_choices[fire];
+      character.water_state = attack_choices[fire];
+      character.water_state = Math.max(character.water_state - attack_choices[fire]*0.1, 0);
+      character.burned = Math.min(character.burned+attack_choices[fire]*0.1,1.0)
+    },
+    water: () => {
+      character.water_state += attack_choices[water];
+      character.burned -= attack_choices[water] * 0.1;
+      character.burned = Math.max(character.burned, 0.0);
+    },
+    earth: () => {
+      character.defense += attack_choices[earth];
+      character.electrified -= attack_choices[earth] * 0.1;
+      character.electrified = Math.max(character.electrified, 0.0);
+    },
+    wind: () => {
+      character.speed += attack_choices[wind];
+      character.burned += attack_choices[wind] * 0.1;
+      character.burned = Math.min(character.burned, 1.0);
+    },
+    electricity: () => {
+      character.attack +=
+        attack_choices[fire] + attack_choices[water] + attack_choices[earth];
+      character.speed +=
+        attack_choices[fire] + attack_choices[water] + attack_choices[earth];
+    },
+    tree: () => {
+      character.health += attack_choices[water] + attack_choices[earth];
+    },
+    all_elements: () => {
+      character.attack += attack_choices[fire];
+      character.defense += attack_choices[earth];
+      character.speed += attack_choices[wind];
+      let elements = ["fire", "water", "earth", "wind", "electricity", "tree"];
+      apply_rules[elements[Math.floor(Math.random() * elements.length)]];
+    },
+  };
+  result_element = elementsCombinations(attack_choices);
+  apply_rules[result_element]();
+
+  return character;
 }
 /*
 input: json with both characters hero and enemy decisions (like character_decision_template)
@@ -109,40 +142,41 @@ input example:
 }
 output: returns same json from input but with character variables updated
 */
-function GameRules(characters_state_decisions){
-  
-  Object.keys(characters_state_decisions).forEach(key => {
-    let target=characters_state_decisions[key].target
-    let character=characters_state_decisions[target].character
-    let attack_choices=characters_state_decisions[key].attack_choices
+function GameRules(characters_state_decisions) {
+  Object.keys(characters_state_decisions).forEach((key) => {
+    let target = characters_state_decisions[key].target;
+    let character = characters_state_decisions[target].character;
+    let attack_choices = characters_state_decisions[key].attack_choices;
     //if target is himself
-    if(target==key){
+    if (target == key) {
       //alterar estado da personagem
-      characters_state_decisions[target].character=targetEqualsHimselfRules(character,attack_choices)
+      characters_state_decisions[target].character = targetEqualsHimselfRules(
+        character,
+        attack_choices
+      );
       /*
       character.health+=1
       character.defense+=1
       characters_state_decisions[target].character=character
       */
-      
     }
     //if target is the adversary
-    else{
+    else {
       //alterar estado da personagem
-      characters_state_decisions[target].character=targetDiffThanHimselfRules(character,attack_choices)
+      characters_state_decisions[target].character = targetDiffThanHimselfRules(
+        character,
+        attack_choices
+      );
       /*
       character.health-=1
       character.defense-=1
       character.burned+=0.1
       characters_state_decisions[target].character=character
       */
-     
     }
-
-  })
-  return characters_state_decisions
+  });
+  return characters_state_decisions;
 }
-
 
 class Character {
   constructor(character_data) {
