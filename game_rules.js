@@ -84,30 +84,26 @@ function targetDiffThanHimselfRules(character, attack_choices) {
   apply_rules = {
     fire: () => {
       character.health -= attack_choices[fire];
-      character.water_state = attack_choices[fire];
       character.water_state = Math.max(character.water_state - attack_choices[fire]*0.1, 0);
       character.burned = Math.min(character.burned+attack_choices[fire]*0.1,1.0)
     },
     water: () => {
+      character.health -= attack_choices[water];
       character.water_state += attack_choices[water];
-      character.burned -= attack_choices[water] * 0.1;
-      character.burned = Math.max(character.burned, 0.0);
+      character.burned = Math.max(character.burned-attack_choices[water]*0.1, 0.0);
     },
     earth: () => {
-      character.defense += attack_choices[earth];
-      character.electrified -= attack_choices[earth] * 0.1;
-      character.electrified = Math.max(character.electrified, 0.0);
+      character.health -= attack_choices[earth];
+      character.defense -= attack_choices[earth];
     },
     wind: () => {
-      character.speed += attack_choices[wind];
-      character.burned += attack_choices[wind] * 0.1;
-      character.burned = Math.min(character.burned, 1.0);
+      character.health -= attack_choices[wind];
+      character.speed -= attack_choices[wind];
+      character.burned = Math.min(character.burned+attack_choices[wind] * 0.1, 1.0);
     },
     electricity: () => {
-      character.attack +=
-        attack_choices[fire] + attack_choices[water] + attack_choices[earth];
-      character.speed +=
-        attack_choices[fire] + attack_choices[water] + attack_choices[earth];
+      character.health -= (attack_choices[fire]+attack_choices[water]+attack_choices[earth]);
+      character.electrified=Math.min(character.electrified+((attack_choices[fire]+attack_choices[water]+attack_choices[earth])*0.1)/3,1.0)
     },
     tree: () => {
       character.health += attack_choices[water] + attack_choices[earth];
