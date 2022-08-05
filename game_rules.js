@@ -19,7 +19,22 @@ let character_decision_template = {
   target: "enemy",
   attack_choices: { fire: 1, earth: 1, water: 1 },
 };
-
+// let elements = [
+//   "fire",
+//   "water",
+//   "earth",
+//   "wind",
+//   "electricity",
+//   "tree",
+//   "vapor",
+//   "ice",
+//   "ice_vapor",
+//   "ice_tree",
+//   "lava",
+//   "blue_fire",
+//   "blue_lava",
+//   "sand_storm"
+// ];
 /*
 input: attack choices
 output: string with element combination
@@ -84,95 +99,219 @@ function targetDiffThanHimselfRules(character, attack_choices) {
   apply_rules = {
     fire: () => {
       character.health -= attack_choices[fire];
-      character.water_state = Math.max(character.water_state - attack_choices[fire]*0.1, 0);
-      character.burned = Math.min(character.burned+attack_choices[fire]*0.1,1.0)
+      character.water_state = Math.max(
+        character.water_state - attack_choices[fire] * 0.1,
+        0
+      );
+      character.burned = Math.min(
+        character.burned + attack_choices[fire] * 0.1,
+        1.0
+      );
     },
     water: () => {
       character.health -= attack_choices[water];
       character.water_state += attack_choices[water];
-      character.attack=Math.max(character.attack-attack_choices[water],1)
-      character.burned = Math.max(character.burned-attack_choices[water]*0.1, 0.0);
+      character.attack = Math.max(character.attack - attack_choices[water], 1);
+      character.burned = Math.max(
+        character.burned - attack_choices[water] * 0.1,
+        0.0
+      );
     },
     earth: () => {
       character.health -= attack_choices[earth];
-      character.defense = Math.max(character.defense-attack_choices[earth],0);
+      character.defense = Math.max(
+        character.defense - attack_choices[earth],
+        0
+      );
     },
     wind: () => {
       character.health -= attack_choices[wind];
-      character.speed = Math.max(character.speed-attack_choices[wind],0.0);
-      if(character.burned>=0.1){
-        character.burned = Math.min(character.burned+attack_choices[wind] * 0.1, 1.0);
+      character.speed = Math.max(character.speed - attack_choices[wind], 0.0);
+      if (character.burned >= 0.1) {
+        character.burned = Math.min(
+          character.burned + attack_choices[wind] * 0.1,
+          1.0
+        );
       }
     },
     //water+wind
-    ice:()=>{
-      character.health -= (attack_choices[water]+attack_choices[wind]);
+    ice: () => {
+      character.health -= attack_choices[water] + attack_choices[wind];
       character.water_state += attack_choices[water];
-      character.speed = Math.max(character.speed-attack_choices[wind],0.0);
-      character.attack= Math.max(character.attack-attack_choices[water],1)
-      character.burned = Math.max(character.burned-attack_choices[water]*0.1, 0.0);
-      character.frozen = Math.min(character.frozen+(attack_choices[water]+attack_choices[wind])*0.1,1.0)
+      character.speed = Math.max(character.speed - attack_choices[wind], 0.0);
+      character.attack = Math.max(character.attack - attack_choices[water], 1);
+      character.burned = Math.max(
+        character.burned - attack_choices[water] * 0.1,
+        0.0
+      );
+      character.frozen = Math.min(
+        character.frozen + (attack_choices[water] + attack_choices[wind]) * 0.1,
+        1.0
+      );
     },
     //water+fire+earth
     electricity: () => {
-      character.health -= (attack_choices[fire]+attack_choices[water]+attack_choices[earth]);
-      character.electrified=Math.min(character.electrified+((attack_choices[fire]+attack_choices[water]+attack_choices[earth])*0.1),1.0)
-      haracter.attack=Math.max(character.attack-attack_choices[water],1)
-      character.defense = Math.max(character.defense-attack_choices[earth],0);
+      character.health -=
+        attack_choices[fire] + attack_choices[water] + attack_choices[earth];
+      character.electrified = Math.min(
+        character.electrified +
+          (attack_choices[fire] +
+            attack_choices[water] +
+            attack_choices[earth]) *
+            0.1,
+        1.0
+      );
+      haracter.attack = Math.max(character.attack - attack_choices[water], 1);
+      character.defense = Math.max(
+        character.defense - attack_choices[earth],
+        0
+      );
     },
     //water+earth
     tree: () => {
-      character.health -= (attack_choices[water] + attack_choices[earth]);
-      character.defense = Math.max(character.defense-attack_choices[earth],0);
-      character.attack=Math.max(character.attack-attack_choices[water],1)
-      character.rooted = Math.min(character.rooted+(attack_choices[water] + attack_choices[earth])*0.1,1.0) 
+      character.health -= attack_choices[water] + attack_choices[earth];
+      character.defense = Math.max(
+        character.defense - attack_choices[earth],
+        0
+      );
+      character.attack = Math.max(character.attack - attack_choices[water], 1);
+      character.rooted = Math.min(
+        character.rooted +
+          (attack_choices[water] + attack_choices[earth]) * 0.1,
+        1.0
+      );
     },
     //fire + earth
-    lava:()=>{
-      character.health -= (attack_choices[fire]+attack_choices[earth])
-      character.water_state = Math.max(character.water_state - attack_choices[fire]*0.1, 0);
-      character.burned = Math.min(character.burned+attack_choices[fire]*0.1,1.0)
-      character.defense = Math.max(character.defense-attack_choices[earth],0);
+    lava: () => {
+      character.health -= attack_choices[fire] + attack_choices[earth];
+      character.water_state = Math.max(
+        character.water_state - attack_choices[fire] * 0.1,
+        0
+      );
+      character.burned = Math.min(
+        character.burned + attack_choices[fire] * 0.1,
+        1.0
+      );
+      character.defense = Math.max(
+        character.defense - attack_choices[earth],
+        0
+      );
     },
     //water + fire
-    vapor:()=>{
-      character.health -= (attack_choices[water] + attack_choices[fire]);
-      character.blind = Math.min(character.blind+(attack_choices[water] + attack_choices[fire])*0.1,1.0)
-      character.attack=Math.max(character.attack-attack_choices[water],1)
+    vapor: () => {
+      character.health -= attack_choices[water] + attack_choices[fire];
+      character.blind = Math.min(
+        character.blind + (attack_choices[water] + attack_choices[fire]) * 0.1,
+        1.0
+      );
+      character.attack = Math.max(character.attack - attack_choices[water], 1);
     },
     //earth + wind
-    sand_storm:()=>{
-      character.health -= (attack_choices[wind]+attack_choices[earth]);
-      character.speed = Math.max(character.speed-attack_choices[wind],0.0);
-      character.defense = Math.max(character.defense-attack_choices[earth],0);
+    sand_storm: () => {
+      character.health -= attack_choices[wind] + attack_choices[earth];
+      character.speed = Math.max(character.speed - attack_choices[wind], 0.0);
+      character.defense = Math.max(
+        character.defense - attack_choices[earth],
+        0
+      );
     },
     //fire + wind
-    blue_fire:()=>{
-      character.health -= (attack_choices[fire]+attack_choices[wind]);
-      character.water_state = Math.max(character.water_state - (attack_choices[fire]+attack_choices[wind])*0.1, 0);
-      character.burned = Math.min(character.burned+(attack_choices[fire]+attack_choices[wind])*0.1,1.0)
+    blue_fire: () => {
+      character.health -= attack_choices[fire] + attack_choices[wind];
+      character.water_state = Math.max(
+        character.water_state -
+          (attack_choices[fire] + attack_choices[wind]) * 0.1,
+        0
+      );
+      character.burned = Math.min(
+        character.burned + (attack_choices[fire] + attack_choices[wind]) * 0.1,
+        1.0
+      );
     },
     //fire + wind + earth
-    blue_lava:()=>{
-      character.health -= (attack_choices[fire]+attack_choices[wind]);
-      character.water_state = Math.max(character.water_state - (attack_choices[fire]+attack_choices[wind])*0.1, 0);
-      character.burned = Math.min(character.burned+(attack_choices[fire]+attack_choices[wind])*0.1,1.0)
-      character.defense = Math.max(character.defense-attack_choices[earth],0);
+    blue_lava: () => {
+      character.health -= attack_choices[fire] + attack_choices[wind];
+      character.water_state = Math.max(
+        character.water_state -
+          (attack_choices[fire] + attack_choices[wind]) * 0.1,
+        0
+      );
+      character.burned = Math.min(
+        character.burned + (attack_choices[fire] + attack_choices[wind]) * 0.1,
+        1.0
+      );
+      character.defense = Math.max(
+        character.defense - attack_choices[earth],
+        0
+      );
     },
     //water+fire+wind
-    ice_vapor:()=>{
-      character.health -= (attack_choices[water] + attack_choices[fire] + attack_choices[wind]);
-      character.blind = Math.min(character.blind+(attack_choices[water] + attack_choices[fire])*0.1,1.0)
-      character.speed = Math.max(character.speed-attack_choices[wind],0.0);
-      character.attack= Math.max(character.attack-attack_choices[water],1)
-      character.burned = Math.max(character.burned-attack_choices[water]*0.1, 0.0);
-      character.frozen = Math.min(character.frozen+(attack_choices[water]+attack_choices[wind])*0.1,1.0)
+    ice_vapor: () => {
+      character.health -=
+        attack_choices[water] + attack_choices[fire] + attack_choices[wind];
+      character.blind = Math.min(
+        character.blind + (attack_choices[water] + attack_choices[fire]) * 0.1,
+        1.0
+      );
+      character.speed = Math.max(character.speed - attack_choices[wind], 0.0);
+      character.attack = Math.max(character.attack - attack_choices[water], 1);
+      character.burned = Math.max(
+        character.burned - attack_choices[water] * 0.1,
+        0.0
+      );
+      character.frozen = Math.min(
+        character.frozen + (attack_choices[water] + attack_choices[wind]) * 0.1,
+        1.0
+      );
+    },
+    ice_tree:()=>{
+      character.health -= attack_choices[water] + attack_choices[earth];
+      character.defense = Math.max(
+        character.defense - attack_choices[earth],
+        0
+      );
+      character.attack = Math.max(character.attack - attack_choices[water], 1);
+      character.rooted = Math.min(
+        character.rooted +
+          (attack_choices[water] + attack_choices[earth]) * 0.1,
+        1.0
+      );
+      character.speed = Math.max(character.speed - attack_choices[wind], 0.0);
+      character.attack = Math.max(character.attack - attack_choices[water], 1);
+      character.burned = Math.max(
+        character.burned - attack_choices[water] * 0.1,
+        0.0
+      );
+      character.frozen = Math.min(
+        character.frozen + (attack_choices[water] + attack_choices[wind]) * 0.1,
+        1.0
+      );
     },
     all_elements: () => {
-      character.attack += attack_choices[fire];
-      character.defense += attack_choices[earth];
-      character.speed += attack_choices[wind];
-      let elements = ["fire", "water", "earth", "wind", "electricity", "tree"];
+      character.health -=
+        attack_choices[water] +
+        attack_choices[fire] +
+        attack_choices[wind] +
+        attack_choices[earth];
+      character.attack -= attack_choices[water];
+      character.defense -= attack_choices[earth];
+      character.speed -= attack_choices[wind];
+      let elements = [
+        "fire",
+        "water",
+        "earth",
+        "wind",
+        "electricity",
+        "tree",
+        "vapor",
+        "ice",
+        "ice_vapor",
+        "ice_tree",
+        "lava",
+        "blue_fire",
+        "blue_lava",
+        "sand_storm"
+      ];
       apply_rules[elements[Math.floor(Math.random() * elements.length)]];
     },
   };
