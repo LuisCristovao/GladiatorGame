@@ -169,8 +169,11 @@ function targetDiffThanHimselfRules(character, attack_choices) {
     //water+wind
     ice: () => {
       character.health -= attack_choices["water"] + attack_choices["wind"];
-      character.water_state += attack_choices["water"];
-      character.speed = Math.max(character.speed - attack_choices["wind"], 0.0);
+      //character.water_state += attack_choices["water"];
+      character.speed = Math.max(
+        character.speed - attack_choices["wind"] * 0.1,
+        0.0
+      );
       character.attack = Math.max(
         character.attack - attack_choices["water"],
         1
@@ -306,7 +309,7 @@ function targetDiffThanHimselfRules(character, attack_choices) {
           (attack_choices["water"] + attack_choices["fire"]) * 0.1,
         1.0
       );
-      character.speed = Math.max(character.speed - attack_choices["wind"], 0.0);
+      character.speed = Math.max(character.speed - attack_choices["wind"]*0.1, 0.0);
       character.attack = Math.max(
         character.attack - attack_choices["water"],
         1
@@ -337,7 +340,7 @@ function targetDiffThanHimselfRules(character, attack_choices) {
           (attack_choices["water"] + attack_choices["earth"]) * 0.1,
         1.0
       );
-      character.speed = Math.max(character.speed - attack_choices["wind"], 0.0);
+      character.speed = Math.max(character.speed - attack_choices["wind"]*0.1, 0.0);
       character.attack = Math.max(
         character.attack - attack_choices["water"],
         1
@@ -358,9 +361,9 @@ function targetDiffThanHimselfRules(character, attack_choices) {
         attack_choices["fire"] +
         attack_choices["wind"] +
         attack_choices["earth"];
-      character.attack -= attack_choices["water"];
-      character.defense -= attack_choices["earth"];
-      character.speed -= attack_choices["wind"];
+      character.attack = Math.max(character.attack-attack_choices["water"],1);
+      character.defense = Math.max(character.defense-attack_choices["earth"],0);
+      character.speed = Math.max(character.speed-attack_choices["wind"]*0.1,0.0);
       let elements = [
         "fire",
         "water",
@@ -377,7 +380,7 @@ function targetDiffThanHimselfRules(character, attack_choices) {
         "blue_lava",
         "sand_storm",
       ];
-      apply_rules[elements[Math.floor(Math.random() * elements.length)]];
+      apply_rules[elements[Math.floor(Math.random() * elements.length)]]();
     },
   };
   result_element = elementsCombinations(attack_choices);
@@ -469,7 +472,7 @@ class Character {
     this.electrified = character_data.electrified;
     this.water_state = character_data.water_state;
 
-    this.attack_slots = character_data.attack_slots
+    this.attack_slots = character_data.attack_slots;
   };
   show_state = () => {
     return {
@@ -512,7 +515,7 @@ let first_state = {
   hero: {
     character: hero,
     target: "enemy",
-    attack_choices: { fire: 1, earth: 1, water: 1 },
+    attack_choices: { fire: 1, earth: 1, water: 1 ,wind:1},
   },
   enemy: {
     character: enemy,
@@ -524,7 +527,7 @@ let next_state = {
   hero: {
     character: new Character(hero.show_state()),
     target: "enemy",
-    attack_choices: { fire: 1, earth: 1, water: 1 },
+    attack_choices: { fire: 1, earth: 1, water: 1 ,wind:1},
   },
   enemy: {
     character: new Character(enemy.show_state()),
