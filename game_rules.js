@@ -14,11 +14,11 @@ const default_character_data = {
   attack_slots: 1,
 };
 
-let character_decision_template = {
+/* let character_decision_template = {
   character: hero_character_variable,
   target: "enemy",
   attack_choices: { fire: 1, earth: 1, water: 1 },
-};
+}; */
 // let elements = [
 //   "fire",
 //   "water",
@@ -45,7 +45,23 @@ example:
   input:{fire:3}
   output: "fire"
 */
-function elementsCombinations() {}
+function elementsCombinations(elements_input) {
+  let final_element = "";
+  let element_array = [];
+  Object.keys(elements_input).forEach((element) => {
+    element_array.push(element);
+  });
+  element_array.sort(); //['earth', 'fire', 'water', 'wind']
+  let elemets_combinations_results = {
+    "earth":"earth",
+    "fire":"fire",
+    "water":"water",
+    "wind":"wind",
+    "earth fire":"lava",
+    
+  };
+  return final_element;
+}
 function targetEqualsHimselfRules(character, attack_choices) {
   apply_rules = {
     fire: () => {
@@ -264,7 +280,7 @@ function targetDiffThanHimselfRules(character, attack_choices) {
         1.0
       );
     },
-    ice_tree:()=>{
+    ice_tree: () => {
       character.health -= attack_choices[water] + attack_choices[earth];
       character.defense = Math.max(
         character.defense - attack_choices[earth],
@@ -310,7 +326,7 @@ function targetDiffThanHimselfRules(character, attack_choices) {
         "lava",
         "blue_fire",
         "blue_lava",
-        "sand_storm"
+        "sand_storm",
       ];
       apply_rules[elements[Math.floor(Math.random() * elements.length)]];
     },
@@ -330,7 +346,7 @@ input example:
     attack_choices:{fire:1,earth:1,water:1}
   },
   enemy:{
-    character: hero_character_variable,
+    character: enemy_character_variable,
     target:"hero",
     attack_choices:{fire:1,earth:1,water:1}
   }
@@ -419,4 +435,5 @@ class Character {
 }
 
 let hero = new Character(default_character_data);
+let enemy = new Character(default_character_data);
 console.log(hero.health);
