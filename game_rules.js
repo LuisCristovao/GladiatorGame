@@ -46,21 +46,31 @@ example:
   output: "fire"
 */
 function elementsCombinations(elements_input) {
-  let final_element = "";
   let element_array = [];
   Object.keys(elements_input).forEach((element) => {
     element_array.push(element);
   });
-  element_array.sort(); //['earth', 'fire', 'water', 'wind']
-  let elemets_combinations_results = {
+  let elements_input_string=element_array.sort().join(" "); //['earth', 'fire', 'water', 'wind']
+  let elements_combinations_results = {
     "earth":"earth",
     "fire":"fire",
     "water":"water",
     "wind":"wind",
     "earth fire":"lava",
-    
+    "earth water":"tree",
+    "earth wind":"sand_storm",
+    "earth fire water":"electricity",
+    "earth fire wind": "blue_lava",
+    "earth water wind": "ice_tree",
+    "fire water":"vapor",
+    "fire wind":"blue_fire",
+    "fire water wind":"ice_vapor",
+    "water wind":"ice",
+    "earth fire water wind":"all_elements"
+
   };
-  return final_element;
+  return elements_combinations_results[elements_input_string]
+  
 }
 function targetEqualsHimselfRules(character, attack_choices) {
   apply_rules = {
@@ -280,6 +290,7 @@ function targetDiffThanHimselfRules(character, attack_choices) {
         1.0
       );
     },
+    //water + earth + wind
     ice_tree: () => {
       character.health -= attack_choices[water] + attack_choices[earth];
       character.defense = Math.max(
