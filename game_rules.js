@@ -1,7 +1,7 @@
 const default_character_data = {
   health: 30,
-  attack: 1,
-  defense: 0,
+  attack: 2,
+  defense: 4,
   speed: 1.0,
 
   //states
@@ -9,7 +9,7 @@ const default_character_data = {
   frozen: 0.0,
   rooted: 0.0,
   electrified: 0.0,
-  water_state: 0,
+  water_state: 1,
   blind: 0.0,
 
   attack_slots: 1,
@@ -514,25 +514,25 @@ console.log(hero.health);
 let first_state = {
   hero: {
     character: hero,
-    target: "enemy",
-    attack_choices: { fire: 1, earth: 1, water: 1 ,wind:1},
+    target: "hero",
+    attack_choices: { water: 2, earth:1},
   },
   enemy: {
     character: enemy,
-    target: "hero",
+    target: "enemy",
     attack_choices: { fire: 1, water: 1 },
   },
 };
 let next_state = {
   hero: {
     character: new Character(hero.show_state()),
-    target: "enemy",
-    attack_choices: { fire: 1, earth: 1, water: 1 ,wind:1},
+    target: "hero",
+    attack_choices: { fire:1},
   },
   enemy: {
     character: new Character(enemy.show_state()),
-    target: "hero",
-    attack_choices: { fire: 1, water: 1 },
+    target: "enemy",
+    attack_choices: { fire: 1, water: 1,earth:1 },
   },
 };
 console.log(first_state);
