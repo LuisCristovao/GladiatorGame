@@ -158,7 +158,7 @@ function targetDiffThanHimselfRules(character, attack_choices) {
     },
     wind: () => {
       character.health -= attack_choices["wind"];
-      character.speed = Math.max(character.speed - attack_choices["wind"], 0.0);
+      character.speed = Math.max(character.speed - attack_choices["wind"]*0.1, 0.0);
       if (character.burned >= 0.1) {
         character.burned = Math.min(
           character.burned + attack_choices["wind"] * 0.1,
